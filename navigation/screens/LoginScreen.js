@@ -18,8 +18,8 @@ function LoginScreen({navigation}) {
                     <TouchableOpacity style={styles.Button}>
                         <Text style={styles.ButtonText}> Sign in</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('Sign Up')}>
-                        <Text style={styles.ButtonText}> Sign up</Text>
+                    <TouchableOpacity style={styles.TertiaryButton} onPress={() => navigation.navigate('Sign Up')}>
+                        <Text style={styles.TertiaryButtonText}> Sign up</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -92,6 +92,15 @@ const styles = StyleSheet.create({
     ButtonText: {
         fontSize: 18,
         fontWeight: 'bold',
+    },
+    TertiaryButtonText: {
+        fontSize: 18,
+        color: "#777777",
+        fontWeight: 'bold',
+
+    },
+    TertiaryButton: {
+        paddingTop: 20,
     }
 })
 

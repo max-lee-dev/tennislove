@@ -1,12 +1,54 @@
-import * as React from 'react';
-
+import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
 import BackIcon from 'react-native-vector-icons/Feather'
-
+import firebase from '../../Firebase/firebase.js';
 import {View, ScrollView, Text, TextInput, TouchableOpacity} from 'react-native';
+import DropdownComponent from "../../components/DropdownComponent";
 
 function SignupScreen({navigation}) {
 
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [state, setState] = useState('');
+    const [city, setCity] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [skill, setSkill] = useState('');
+    const [selected, setSelected] = useState("");
+    const [age, setAge] = useState('');
+
+
+    const handleFirstName = (text) => {
+        setFirstName(text)
+    }
+
+    const handleLastName = (text) => {
+        setLastName(text)
+    }
+
+    const handleEmail = (text) => {
+        setEmail(text)
+    }
+
+    const handlePassword = (text) => {
+        setPassword(text)
+    }
+
+    const handleConfirmPassword = (text) => {
+        setConfirmPassword(text)
+    }
+
+    const handleState = (text) => {
+        setState(text)
+    }
+
+    const handleCity = (text) => {
+        setCity(text)
+    }
+
+    
     return (
         <View style={styles.container}>
             <View style={styles.TopView}>
@@ -17,16 +59,26 @@ function SignupScreen({navigation}) {
                 <Text style={styles.Heading}>Create an account</Text>
                 <View style={styles.formView}>
 
-                    <TextInput style={styles.textInput} placeholderTextColor={"#949494"} placeholder="Email"/>
+                    <TextInput style={styles.textInput} onChangeText={handleFirstName} value={firstName}
+                               placeholderTextColor={"#949494"}
+                               placeholder="First Name"/>
 
-                    <TextInput style={styles.textInput} secureTextEntry={true} placeholderTextColor={"#949494"}
+                    <TextInput style={styles.textInput} onChangeText={handleLastName} value={lastName}
+                               placeholderTextColor={"#949494"} placeholder="Last Name"/>
+
+                    <TextInput style={styles.textInput} onChangeText={handleEmail} value={email}
+                               placeholderTextColor={"#949494"} placeholder="Email"/>
+
+                    <TextInput style={styles.textInput} onChangeText={handlePassword} value={password}
+                               secureTextEntry={true} placeholderTextColor={"#949494"}
                                placeholder="Password"/>
-                    <TextInput style={styles.textInput} secureTextEntry={true} placeholderTextColor={"#949494"}
+                    <TextInput style={styles.textInput} marginBottom={20} onChangeText={handleConfirmPassword}
+                               value={confirmPassword}
+                               secureTextEntry={true} placeholderTextColor={"#949494"}
                                placeholder="Confirm password"/>
-                    <TextInput style={styles.textInput} secureTextEntry={true} placeholderTextColor={"#949494"}
-                               placeholder="Location"/>
-                    <TextInput style={styles.textInput} secureTextEntry={true} placeholderTextColor={"#949494"}
-                               placeholder="Skill level"/>
+
+                    <DropdownComponent/>
+
                     <TouchableOpacity style={styles.Button}>
                         <Text style={styles.ButtonText}> Create account</Text>
                     </TouchableOpacity>
