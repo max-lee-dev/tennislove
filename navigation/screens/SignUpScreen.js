@@ -86,8 +86,20 @@ function SignupScreen({navigation}) {
     async function createUser() {
         if (!validCredentials()) return;
 
-        const user = createUserWithEmailAndPassword(auth, email, password);
-        await setDoc(doc(db, "users", "test", user.uid), {
+        createUserWithEmailAndPassword(auth, email, password).then((user) => {
+            addUserToDB(user.user.uid);
+            setError('');
+            navigation.navigate('TabNavigator', {screen: 'Home'});
+        }).catch((error) => {
+            setError(error.message);
+        });
+
+
+    }
+
+    function addUserToDB(uid) {
+        const docRef = doc(db, "users", uid);
+        setDoc(docRef, {
             firstName: firstName,
             lastName: lastName,
             email: email,
@@ -96,10 +108,11 @@ function SignupScreen({navigation}) {
             phoneNumber: phoneNumber,
             skill: skill,
             age: age,
-            uid: user.uid
+        }).then(() => {
+            console.log("Document written with ID: ", docRef.id);
+        }).catch((error) => {
+            console.error("Error adding document: ", error);
         });
-
-
     }
 
 

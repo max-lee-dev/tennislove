@@ -26,6 +26,7 @@ export default function MainContainer() {
 
     return (
         <NavigationContainer>
+            
             {!loggedIn && (
                 <Stack.Navigator
                     tabBarOptions={({route}) => ({
@@ -33,6 +34,8 @@ export default function MainContainer() {
                         }
                     )}
                 >
+
+
                     <Stack.Screen name={loginName} component={LoginScreen} options={{headerShown: false}}/>
 
                     <Stack.Screen name={signupName} component={SignUpScreen} options={{headerShown: false}}/>
