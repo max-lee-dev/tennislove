@@ -21,9 +21,10 @@ const data = [
 
 ];
 
-const DropdownComponent = () => {
+const DropdownComponent = ({myfunction}) => {
     const [value, setValue] = useState(null);
     const [isFocus, setIsFocus] = useState(false);
+
 
     const renderLabel = () => {
         if (value || isFocus) {
@@ -56,6 +57,7 @@ const DropdownComponent = () => {
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
                 onChange={item => {
+                    myfunction(item.value);
                     setValue(item.value);
                     setIsFocus(false);
                 }}

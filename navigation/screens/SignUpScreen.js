@@ -1,9 +1,13 @@
 import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
+import {signInWithEmailAndPassword, createUserWithEmailAndPassword} from 'firebase/auth';
 import BackIcon from 'react-native-vector-icons/Feather'
-import firebase from '../../Firebase/firebase.js';
+import {getFirestore, getDocs, doc, addDoc, setDoc, collection} from "firebase/firestore";
+import {auth} from '../../Firebase/firebase';
+import {db} from '../../Firebase/firebase';
 import {View, ScrollView, Text, TextInput, TouchableOpacity} from 'react-native';
 import DropdownComponent from "../../components/DropdownComponent";
+
 
 function SignupScreen({navigation}) {
 
@@ -18,6 +22,13 @@ function SignupScreen({navigation}) {
     const [skill, setSkill] = useState('');
     const [selected, setSelected] = useState("");
     const [age, setAge] = useState('');
+    const [error, setError] = useState('');
+
+
+    function onDropdownChange(selected) {
+        console.log(selected);
+        setSelected(selected);
+    }
 
 
     const handleFirstName = (text) => {
@@ -48,7 +59,50 @@ function SignupScreen({navigation}) {
         setCity(text)
     }
 
-    
+    function validCredentials() {
+        if (firstName === '') {
+            setError('Please enter your first name');
+            return false;
+        } else if (lastName === '') {
+            setError('Please enter your last name');
+            return false;
+        } else if (email === '') {
+            setError('Please enter your email');
+            return false;
+        } else if (password === '' || password.length < 6) {
+            setError('Please a valid password');
+            return false;
+        } else if (password !== confirmPassword) {
+
+            setError('Passwords do not match');
+            return false;
+        } else if (selected === '') {
+            setError('Please select your skill level');
+            return false;
+        }
+        return true;
+    }
+
+    async function createUser() {
+        if (!validCredentials()) return;
+
+        const user = createUserWithEmailAndPassword(auth, email, password);
+        await setDoc(doc(db, "users", "test", user.uid), {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            state: state,
+            city: city,
+            phoneNumber: phoneNumber,
+            skill: skill,
+            age: age,
+            uid: user.uid
+        });
+
+
+    }
+
+
     return (
         <View style={styles.container}>
             <View style={styles.TopView}>
@@ -67,7 +121,7 @@ function SignupScreen({navigation}) {
                                placeholderTextColor={"#949494"} placeholder="Last Name"/>
 
                     <TextInput style={styles.textInput} onChangeText={handleEmail} value={email}
-                               placeholderTextColor={"#949494"} placeholder="Email"/>
+                               placeholderTextColor={"#949494"} type={"email"} placeholder="Email"/>
 
                     <TextInput style={styles.textInput} onChangeText={handlePassword} value={password}
                                secureTextEntry={true} placeholderTextColor={"#949494"}
@@ -77,9 +131,11 @@ function SignupScreen({navigation}) {
                                secureTextEntry={true} placeholderTextColor={"#949494"}
                                placeholder="Confirm password"/>
 
-                    <DropdownComponent/>
+                    <DropdownComponent myfunction={onDropdownChange}/>
 
-                    <TouchableOpacity style={styles.Button}>
+                    <Text>{error}</Text>
+
+                    <TouchableOpacity style={styles.Button} onPress={createUser}>
                         <Text style={styles.ButtonText}> Create account</Text>
                     </TouchableOpacity>
 
