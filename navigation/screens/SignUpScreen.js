@@ -89,7 +89,7 @@ function SignupScreen({navigation}) {
         createUserWithEmailAndPassword(auth, email, password).then((user) => {
             addUserToDB(user.user.uid);
             setError('');
-            navigation.navigate('TabNavigator', {screen: 'Home'});
+            navigation.navigate('Home');
         }).catch((error) => {
             setError(error.message);
         });
@@ -106,8 +106,9 @@ function SignupScreen({navigation}) {
             state: state,
             city: city,
             phoneNumber: phoneNumber,
-            skill: skill,
+            skill: selected,
             age: age,
+            uid: uid
         }).then(() => {
             console.log("Document written with ID: ", docRef.id);
         }).catch((error) => {
