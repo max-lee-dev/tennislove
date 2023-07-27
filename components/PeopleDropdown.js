@@ -1,28 +1,25 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
-import Feather from 'react-native-vector-icons/Feather';
-
+import Feather from 'react-native-vector-icons/Ionicons';
 
 const data = [
-    {label: '1.0', value: "1.0"},
-    {label: '1.5', value: "1.5"},
-    {label: '2.0', value: "2.0"},
-    {label: '2.5', value: "2.5"},
-    {label: '3.0', value: "3.0"},
-    {label: '3.5', value: "3.5"},
-    {label: '4.0', value: "4.0"},
-    {label: '4.5', value: "4.5"},
-    {label: '5.0', value: "5.0"},
-    {label: '5.5', value: "5.5"},
-    {label: '6.0', value: "6.0"},
-    {label: '6.5', value: "6.5"},
-    {label: '7.0', value: "7.0"},
+    {label: '1', value: "1"},
+    {label: '2', value: "2"},
+    {label: '3', value: "3"},
+    {label: '4', value: "4"},
+    {label: '5', value: "5"},
+    {label: '6', value: "6"},
+    {label: '7', value: "7"},
+    {label: '8', value: "8"},
+    {label: '9', value: "9"},
+    {label: '10', value: "10"},
 
 
 ];
 
-const DropdownComponent = ({myfunction}) => {
+
+const PeopleDropdown = ({changePeople}) => {
     const [value, setValue] = useState(null);
     const [isFocus, setIsFocus] = useState(false);
 
@@ -52,13 +49,13 @@ const DropdownComponent = ({myfunction}) => {
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
-                placeholder={!isFocus ? 'Select level' : '...'}
+                placeholder={!isFocus ? 'Select State' : '...'}
                 searchPlaceholder="Search..."
                 value={value}
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
                 onChange={item => {
-                    myfunction(item.value);
+                    changePeople(item.value);
                     setValue(item.value);
                     setIsFocus(false);
                 }}
@@ -66,7 +63,7 @@ const DropdownComponent = ({myfunction}) => {
                     <Feather
                         style={styles.icon}
                         color={isFocus ? 'blue' : 'black'}
-                        name="bar-chart-2"
+                        name="people"
                         size={20}
                     />
                 )}
@@ -75,10 +72,11 @@ const DropdownComponent = ({myfunction}) => {
     );
 };
 
-export default DropdownComponent;
+export default PeopleDropdown;
 
 const styles = StyleSheet.create({
     container: {
+        marginTop: 20,
 
         backgroundColor: 'white',
         width: '80%',

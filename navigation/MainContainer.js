@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useState} from 'react';
 
 import {View, Text} from 'react-native';
 
@@ -15,19 +16,35 @@ import HomeScreen from './screens/HomeScreen'
 import AddEvent from './screens/AddEvent'
 import LoginScreen from './screens/LoginScreen'
 import SettingsScreen from './screens/SettingsScreen'
+import ChatScreen from "./screens/ChatScreen";
+import ChatHub from "./screens/ChatHub";
 
 
 const homeName = 'Home';
+const homeStackName = 'HomeStack';
 const settingsName = 'Settings';
 const addEventName = 'AddEvent'
 const signupName = 'Sign Up';
 const loginName = 'Log In';
+const chatScreenName = 'ChatScreen';
+const chatHubName = 'Chat Hub';
+const chatHubStackName = 'Chat Hub Stack';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 
-function HomeStack() {
+function ChatStack({navigation}) {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name={chatHubName} component={ChatHub} options={{headerShown: false}}/>
+            <Stack.Screen name={chatScreenName} component={ChatScreen} options={{headerShown: false}}/>
+        </Stack.Navigator>
+    )
+}
+
+function HomeStack({navigation}) {
+    const [modal, setModal] = React.useState(false);
     return (
 
         <Tab.Navigator
@@ -37,8 +54,8 @@ function HomeStack() {
 
                     if (route.name === homeName) {
                         iconName = focused ? 'home' : 'home-outline';
-                    } else if (route.name === settingsName) {
-                        iconName = focused ? 'settings' : 'settings-outline';
+                    } else if (route.name === chatHubStackName) {
+                        iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
                     } else if (route.name === addEventName) {
                         iconName = focused ? 'add-circle' : 'add-circle-outline';
                     }
@@ -61,7 +78,10 @@ function HomeStack() {
 
                             headerRight: () => (
                                 <View>
-                                    <Text>hi</Text>
+                                    <Ionicons name={'cog'} size={30} color={'black'} onPress={() => {
+                                        navigation.navigate(settingsName)
+                                    }
+                                    }/>
                                 </View>
                             ),
                         }}
@@ -76,15 +96,26 @@ function HomeStack() {
             />
 
 
-            <Tab.Screen name={settingsName} component={SettingsScreen}
+            <Tab.Screen name={chatHubStackName} component={ChatStack}
 
                         options={{
-                            tabBarLabel: auth.currentUser?.email,
+                            title: 'Messages',
+                            tabBarLabel: 'Messages',
+
                         }}
             />
 
         </Tab.Navigator>
 
+    )
+}
+
+function LogInStack({navigation}) {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name={loginName} component={LoginScreen} options={{headerShown: false}}/>
+            <Stack.Screen name={signupName} component={SignUpScreen} options={{headerShown: false}}/>
+        </Stack.Navigator>
     )
 }
 
@@ -102,9 +133,7 @@ export default function MainContainer() {
             >
 
 
-                <Stack.Screen name={loginName} component={LoginScreen} options={{headerShown: false}}/>
-
-                <Stack.Screen name={signupName} component={SignUpScreen} options={{headerShown: false}}/>
+                <Stack.Screen name={loginName} component={LogInStack} options={{headerShown: false}}/>
                 <Stack.Screen name={homeName} component={HomeStack} options={{headerShown: false}}/>
 
             </Stack.Navigator>

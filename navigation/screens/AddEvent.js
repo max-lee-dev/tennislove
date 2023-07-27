@@ -1,17 +1,25 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
-import {auth} from '../../Firebase/firebase';
-import {View, TextInput, Text, Button} from 'react-native';
+import {auth, db} from '../../Firebase/firebase';
+import {View, TextInput, Text, Button, ScrollView} from 'react-native';
+import GooglePlacesInput from "../../components/GooglePlacesInput";
+import DatePicker from '../../components/DatePicker'
+import {getFirestore, getDocs, doc, addDoc, setDoc, collection} from "firebase/firestore";
+import TimePicker from '../../components/TimePicker'
+import DropdownComponent from "../../components/DropdownComponent";
+import PeopleDropdown from "../../components/PeopleDropdown";
 
 function AddEvent({navigation}) {
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [location, setLocation] = useState('');
-    const [date, setDate] = useState('');
+    const [date, setDate] = useState(new Date());
     const [time, setTime] = useState('');
     const [skill, setSkill] = useState('');
     const [error, setError] = useState('');
+    const [peopleNeeded, setPeopleNeeded] = useState('');
+
 
     const handleTitle = (text) => {
         setTitle(text)
@@ -25,6 +33,7 @@ function AddEvent({navigation}) {
         setLocation(text)
     }
 
+
     const handleDate = (text) => {
         setDate(text)
     }
@@ -37,8 +46,39 @@ function AddEvent({navigation}) {
         setSkill(text)
     }
 
-    const handleAddEvent = () => {
+    const handlePeopleNeeded = (text) => {
+        setPeopleNeeded(text)
+    }
 
+
+    const handleAddEvent = () => {
+        if (title === '' || description === '' || location === '' || time === '' || skill === '' || peopleNeeded === '') {
+            setError("Please fill out all fields")
+        } else {
+            setError("")
+            addEvent()
+        }
+
+
+    }
+
+    const addEvent = async () => {
+        const docRef = await addDoc(collection(db, "events"), {
+            title: title,
+            description: description,
+            location: location,
+            date: date,
+            time: time,
+            skill: skill,
+            attendees: [],
+            createdWhen: new Date().toDateString(),
+            peopleNeeded: peopleNeeded,
+            creator: auth.currentUser.displayName,
+            creatorUID: auth.currentUser.uid
+        });
+        console.log("Document written with ID: ", docRef.id);
+
+        navigation.navigate('Home')
     }
 
 
@@ -50,12 +90,18 @@ function AddEvent({navigation}) {
                        placeholder={"Description"}/>
             <TextInput style={styles.textInput} onChangeText={handleLocation} value={location}
                        placeholder={"Location"}/>
-            <TextInput style={styles.textInput} onChangeText={handleDate} value={date} placeholder={"Date"}/>
-            <TextInput style={styles.textInput} onChangeText={handleTime} value={time} placeholder={"Time"}/>
-            <TextInput style={styles.textInput} onChangeText={handleSkill} value={skill} placeholder={"Skill"}/>
+            <GooglePlacesInput/>
+            <View style={{width: '80%', display: 'flex', flexDirection: 'row', justifyContent: "space-evenly"}}>
+                <DatePicker changeDate={handleDate}/>
+                <TimePicker changeTime={handleTime}/>
+            </View>
+            <View style={{marginTop: 20, width: '100%', flex: 1, alignItems: 'center'}}>
+                <DropdownComponent myfunction={handleSkill}/>
+            </View>
+            <PeopleDropdown changePeople={handlePeopleNeeded}/>
+
             <Button title={"Add Event"} onPress={handleAddEvent}/>
-
-
+            <Text>{error}</Text>
         </View>
     )
 }

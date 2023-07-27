@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
-import {signInWithEmailAndPassword, createUserWithEmailAndPassword} from 'firebase/auth';
+import {signInWithEmailAndPassword, updateProfile, createUserWithEmailAndPassword} from 'firebase/auth';
 import BackIcon from 'react-native-vector-icons/Feather'
 import {getFirestore, getDocs, doc, addDoc, setDoc, collection} from "firebase/firestore";
 import {auth} from '../../Firebase/firebase';
 import {db} from '../../Firebase/firebase';
 import {View, ScrollView, Text, TextInput, TouchableOpacity} from 'react-native';
 import DropdownComponent from "../../components/DropdownComponent";
+import StatesDropdown from "../../components/StatesDropdown";
 
 
 function SignupScreen({navigation}) {
@@ -28,6 +29,11 @@ function SignupScreen({navigation}) {
     function onDropdownChange(selected) {
         console.log(selected);
         setSelected(selected);
+    }
+
+    function onStateChange(selected) {
+        console.log(selected);
+        setState(selected);
     }
 
 
@@ -105,11 +111,13 @@ function SignupScreen({navigation}) {
             email: email,
             state: state,
             city: city,
-            phoneNumber: phoneNumber,
             skill: selected,
             age: age,
             uid: uid
         }).then(() => {
+            updateProfile(auth.currentUser, {displayName: firstName + " " + lastName}).catch(
+                (err) => console.log(err)
+            );
             console.log("Document written with ID: ", docRef.id);
         }).catch((error) => {
             console.error("Error adding document: ", error);
@@ -146,6 +154,7 @@ function SignupScreen({navigation}) {
                                placeholder="Confirm password"/>
 
                     <DropdownComponent myfunction={onDropdownChange}/>
+                    <StatesDropdown myfunction={onStateChange}/>
 
                     <Text>{error}</Text>
 

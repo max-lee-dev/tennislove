@@ -3,26 +3,64 @@ import {StyleSheet, Text, View} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 import Feather from 'react-native-vector-icons/Feather';
 
-
 const data = [
-    {label: '1.0', value: "1.0"},
-    {label: '1.5', value: "1.5"},
-    {label: '2.0', value: "2.0"},
-    {label: '2.5', value: "2.5"},
-    {label: '3.0', value: "3.0"},
-    {label: '3.5', value: "3.5"},
-    {label: '4.0', value: "4.0"},
-    {label: '4.5', value: "4.5"},
-    {label: '5.0', value: "5.0"},
-    {label: '5.5', value: "5.5"},
-    {label: '6.0', value: "6.0"},
-    {label: '6.5', value: "6.5"},
-    {label: '7.0', value: "7.0"},
+    {label: 'Alabama', value: 'Alabama'},
+    {label: 'Alaska', value: 'Alaska'},
+    {label: 'Arizona', value: 'Arizona'},
+    {label: 'Arkansas', value: 'Arkansas'},
+    {label: 'California', value: 'California'},
+    {label: 'Colorado', value: 'Colorado'},
+    {label: 'Connecticut', value: 'Connecticut'},
+    {label: 'Delaware', value: 'Delaware'},
+    {label: 'Florida', value: 'Florida'},
+    {label: 'Georgia', value: 'Georgia'},
+    {label: 'Hawaii', value: 'Hawaii'},
+    {label: 'Idaho', value: 'Idaho'},
+    {label: 'Illinois', value: 'Illinois'},
+    {label: 'Indiana', value: 'Indiana'},
+    {label: 'Iowa', value: 'Iowa'},
+    {label: 'Kansas', value: 'Kansas'},
+    {label: 'Kentucky', value: 'Kentucky'},
+    {label: 'Louisiana', value: 'Louisiana'},
+    {label: 'Maine', value: 'Maine'},
+    {label: 'Maryland', value: 'Maryland'},
+    {label: 'Massachusetts', value: 'Massachusetts'},
+    {label: 'Michigan', value: 'Michigan'},
+    {label: 'Minnesota', value: 'Minnesota'},
+    {label: 'Mississippi', value: 'Mississippi'},
+    {label: 'Missouri', value: 'Missouri'},
+    {label: 'Montana', value: 'Montana'},
+    {label: 'Nebraska', value: 'Nebraska'},
+    {label: 'Nevada', value: 'Nevada'},
+    {label: 'New Hampshire', value: 'New Hampshire'},
+    {label: 'New Jersey', value: 'New Jersey'},
+    {label: 'New Mexico', value: 'New Mexico'},
+    {label: 'New York', value: 'New York'},
+    {label: 'North Carolina', value: 'North Carolina'},
+    {label: 'North Dakota', value: 'North Dakota'},
+    {label: 'Ohio', value: 'Ohio'},
+    {label: 'Oklahoma', value: 'Oklahoma'},
+    {label: 'Oregon', value: 'Oregon'},
+    {label: 'Pennsylvania', value: 'Pennsylvania'},
+    {label: 'Rhode Island', value: 'Rhode Island'},
+    {label: 'South Carolina', value: 'South Carolina'},
+    {label: 'South Dakota', value: 'South Dakota'},
 
+    {label: 'Tennessee', value: 'Tennessee'},
+    {label: 'Texas', value: 'Texas'},
+    {label: 'Utah', value: 'Utah'},
+
+    {label: 'Vermont', value: 'Vermont'},
+    {label: 'Virginia', value: 'Virginia'},
+    {label: 'Washington', value: 'Washington'},
+    {label: 'West Virginia', value: 'West Virginia'},
+    {label: 'Wisconsin', value: 'Wisconsin'},
+    {label: 'Wyoming', value: 'Wyoming'},
 
 ];
 
-const DropdownComponent = ({myfunction}) => {
+
+const StatesDropdown = ({myfunction}) => {
     const [value, setValue] = useState(null);
     const [isFocus, setIsFocus] = useState(false);
 
@@ -52,7 +90,7 @@ const DropdownComponent = ({myfunction}) => {
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
-                placeholder={!isFocus ? 'Select level' : '...'}
+                placeholder={!isFocus ? 'Select State' : '...'}
                 searchPlaceholder="Search..."
                 value={value}
                 onFocus={() => setIsFocus(true)}
@@ -75,10 +113,11 @@ const DropdownComponent = ({myfunction}) => {
     );
 };
 
-export default DropdownComponent;
+export default StatesDropdown;
 
 const styles = StyleSheet.create({
     container: {
+        marginTop: 20,
 
         backgroundColor: 'white',
         width: '80%',
