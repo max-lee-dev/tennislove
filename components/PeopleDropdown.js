@@ -49,7 +49,7 @@ const PeopleDropdown = ({changePeople}) => {
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
-                placeholder={!isFocus ? 'Select State' : '...'}
+                placeholder={!isFocus ? 'People needed' : '...'}
                 searchPlaceholder="Search..."
                 value={value}
                 onFocus={() => setIsFocus(true)}

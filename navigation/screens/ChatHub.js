@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 
 function ChatHub({navigation}) {
+    
     const usersRef = collection(db, "users");
 
     const [userInfo, setUserInfo] = useState(null);
@@ -24,10 +25,10 @@ function ChatHub({navigation}) {
         });
     }, []);
 
+    const [modalVisible, setModalVisible] = useState(false);
 
     const chatroomRef = collection(db, "chatrooms");
     const myChatRooms = query(chatroomRef, where("users", "array-contains", auth.currentUser.uid));
-    const [modalVisible, setModalVisible] = useState(false);
     const [chatrooms] = useCollectionData(myChatRooms, {idField: 'id'});
 
     let usersQuery;

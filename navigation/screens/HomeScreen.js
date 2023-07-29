@@ -22,6 +22,8 @@ function HomeScreen({navigation}) {
     const [skill, setSkill] = useState([]);
     const [date, setDate] = useState([]);
     const [peopleNeeded, setPeopleNeeded] = useState([]);
+    const [creatorUID, setCreatorUID] = useState([]);
+    const [roomExists, setRoomExists] = useState(false);
 
 
     useEffect(() => {
@@ -50,6 +52,7 @@ function HomeScreen({navigation}) {
         let tempSkill = [];
         let tempDate = [];
         let tempPeopleNeeded = [];
+        let tempCreatorUID = [];
 
         const eventCollectionRef = collection(db, "events");
         const sort = query(eventCollectionRef, orderBy("time", "desc"));
@@ -64,6 +67,7 @@ function HomeScreen({navigation}) {
             tempCreator.push(doc.data().creator);
             tempSkill.push(doc.data().skill);
             tempPeopleNeeded.push(doc.data().peopleNeeded);
+            tempCreatorUID.push(doc.data().creatorUID);
             let seconds = doc.data().date.seconds;
             let date = new Date(seconds * 1000);
             let dateString = date.toLocaleDateString();
@@ -90,6 +94,7 @@ function HomeScreen({navigation}) {
         setCreatedWhen(tempCreatedWhen);
         setSkill(tempSkill);
         setPeopleNeeded(tempPeopleNeeded);
+        setCreatorUID(tempCreatorUID);
 
         setDate(tempDate);
         console.log(tempPeopleNeeded);
@@ -110,15 +115,18 @@ function HomeScreen({navigation}) {
 
                 {time.map((item, index) => (
                     <View style={styles.container} key={index}>
-                        <Event title={title[index]} createdAt={createdWhen[index]}
-                               creator={creator[index]}
-                               description={description[index]}
-                               location={location[index]}
-                               skill={skill[index]}
-                               date={date[index]}
-                               time={time[index]}
-                               attendees={attendees[index]}
-                               peopleNeeded={peopleNeeded[index]}
+                        <Event
+                            navigation={navigation}
+                            title={title[index]} createdAt={createdWhen[index]}
+                            creator={creator[index]}
+                            description={description[index]}
+                            location={location[index]}
+                            skill={skill[index]}
+                            date={date[index]}
+                            time={time[index]}
+                            attendees={attendees[index]}
+                            peopleNeeded={peopleNeeded[index]}
+                            creatorUID={creatorUID[index]}
 
                         />
                     </View>

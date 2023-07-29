@@ -1,8 +1,8 @@
 import * as React from 'react';
-import {useState, useEffect, useLayoutEffect, useCallback} from 'react';
+import {useState, useEffect, useLayoutEffect, useCallback, useRef} from 'react';
 import {useCollectionData} from 'react-firebase-hooks/firestore';
 import ChatMessage from '../../components/ChatMessage';
-import {View, Text, Button, StyleSheet, TextInput, ScrollView} from 'react-native';
+import {View, Text, Button, Keyboard, StyleSheet, TextInput, ScrollView} from 'react-native';
 import {auth} from '../../Firebase/firebase';
 import {db} from '../../Firebase/firebase';
 import {signOut} from 'firebase/auth';
@@ -11,7 +11,16 @@ import {TouchableOpacity} from "react-native-gesture-handler";
 import Icon from 'react-native-vector-icons/Ionicons';
 
 function ChatScreen({route, navigation}) {
-    const {roomID} = route.params;
+    const {roomID, pretext} = route.params;
+    useEffect(() => {
+        if (pretext) {
+            setTextInput(pretext);
+        }
+
+    }, [pretext]);
+
+
+    const ref = useRef(null);
 
     const messagesRef = collection(db, "messages");
     const sortedChatRoom = query(messagesRef, orderBy("createdAt", "asc"));
@@ -20,6 +29,37 @@ function ChatScreen({route, navigation}) {
     const [messages] = useCollectionData(sortedChatRoom, {idField: 'id'});
     const [textInput, setTextInput] = useState("");
 
+
+    //
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardVisible(true); // or some other action
+            }
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardVisible(false); // or some other action
+            }
+        );
+
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
+
+    useEffect(() => {
+        if (isKeyboardVisible) {
+            ref.current?.scrollToEnd({animated: true});
+        }
+    }, [isKeyboardVisible]);
+
+    //
 
     function logout() {
         navigation.navigate('Log In');
@@ -47,10 +87,13 @@ function ChatScreen({route, navigation}) {
             <View style={{display: 'flex', alignSelf: 'center'}}>
                 <Text>room id: {roomID}</Text>
             </View>
-            <ScrollView style={styles.scrollView}>
-                {messages && messages.map(msg => <ChatMessage senderID={msg.senderID} ogRoom={roomID}
+            <ScrollView style={isKeyboardVisible ? styles.keyboardShownView : styles.keyboardHiddenView}
+                        ref={ref}
+                        onContentSizeChange={() => ref.current?.scrollToEnd({animated: true})}
+            >
+                {messages && messages.map(msg => <ChatMessage key={msg.id} senderID={msg.senderID} ogRoom={roomID}
                                                               msgRoomId={msg.roomID} message={msg.text}
-                                                              key={msg.id}/>)}
+                />)}
 
             </ScrollView>
 
@@ -77,20 +120,29 @@ const styles = StyleSheet.create({
     Button: {
         zIndex: 5,
     },
-    scrollView: {
-        display: 'flex',
+    keyboardHiddenView: {
+        flex: '1',
         flexDirection: 'column',
-        maxHeight: '83%',
+        maxHeight: '80%',
+        backgroundColor: '#fff',
+        width: '100%',
+    },
+    keyboardShownView: {
+        flex: '1',
+        flexDirection: 'column',
+        maxHeight: '40%',
         backgroundColor: '#fff',
         width: '100%',
 
     },
+
     formContainer: {
         alignSelf: 'center',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         height: 40,
+        marginTop: 20,
         width: "99%",
         borderRadius: 10,
         borderColor: "#000",
@@ -110,7 +162,7 @@ const styles = StyleSheet.create({
         marginTop: 0,
         paddingLeft: 10,
 
-        fontSize: 20,
+        fontSize: 16,
         fontFamily: 'LexendDeca_300Light',
 
     },

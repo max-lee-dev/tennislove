@@ -46,9 +46,12 @@ const styles = StyleSheet.create({
     },
 
     myMessage: {
+        maxWidth: '70%',
+
         color: '#000',
     },
     theirMessage: {
+        maxWidth: '70%',
         color: '#000',
 
     }

@@ -26,6 +26,8 @@ const settingsName = 'Settings';
 const addEventName = 'AddEvent'
 const signupName = 'Sign Up';
 const loginName = 'Log In';
+const loginStackName = 'Log In Stack';
+
 const chatScreenName = 'ChatScreen';
 const chatHubName = 'Chat Hub';
 const chatHubStackName = 'Chat Hub Stack';
@@ -132,7 +134,7 @@ export default function MainContainer() {
             >
 
 
-                <Stack.Screen name={loginName} component={LogInStack} options={{headerShown: false}}/>
+                <Stack.Screen name={loginStackName} component={LogInStack} options={{headerShown: false}}/>
                 <Stack.Screen name={homeName} component={HomeStack} options={{headerShown: false}}/>
 
             </Stack.Navigator>
