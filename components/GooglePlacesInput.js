@@ -18,7 +18,7 @@ const GooglePlacesInput = () => {
                         props.notifyChange(details.geometry.location, data);
                     }}
                     query={{
-                        key: 'AIzaSyD1vgRw032C5MwJtjTEInGBaiVk7Typ3PE',
+                        key: '###',
                         language: 'en',
                     }}
                     nearbyPlacesAPI='GooglePlacesSearch'
