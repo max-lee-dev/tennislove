@@ -16,11 +16,13 @@ function ChatHub({navigation}) {
 
     const [userInfo, setUserInfo] = useState(null);
     const thisUserInfo = query(usersRef, where("uid", "==", auth.currentUser?.uid));
-    const snapshot = onSnapshot(thisUserInfo, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            setUserInfo(doc.data());
+    useEffect(() => {
+        const snapshot = onSnapshot(thisUserInfo, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                setUserInfo(doc.data());
+            });
         });
-    });
+    }, []);
 
 
     const chatroomRef = collection(db, "chatrooms");
@@ -42,13 +44,47 @@ function ChatHub({navigation}) {
     }
 
     async function createRoom(user) {
+        const uids = [auth.currentUser.uid, user.uid];
+        const sortedID = uids.sort().join('');
+        console.log("WORKED: ? " + sortedID);
+
         const newChatroom = {
             users: [auth.currentUser.uid, user.uid],
             messages: [],
             createdAt: new Date(),
-            roomID: auth.currentUser.uid + user.uid
+            roomID: sortedID
         }
-        await addDoc(chatroomRef, newChatroom);
+
+        if (chatrooms) {
+            let exists = false;
+
+            chatrooms.forEach(chatroom => {
+                if (chatroom.roomID === sortedID) {
+                    navigation.navigate('ChatScreen', {roomID: sortedID});
+                    console.log("already exists")
+                    exists = true;
+                    setModalVisible(false);
+
+                }
+            })
+            if (!exists) {
+
+                console.log("trying to add")
+                addDoc(chatroomRef, newChatroom).then((docRef) => {
+                    console.log("Document written with ID: ", docRef.id);
+                    navigation.navigate('ChatScreen', {roomID: auth.currentUser.uid + user.uid})
+                    setModalVisible(false);
+
+
+                }).catch((error) => {
+                    console.error("Error adding document: ", error);
+                });
+
+
+            }
+        }
+
+
     }
 
 

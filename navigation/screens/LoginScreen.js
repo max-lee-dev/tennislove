@@ -7,8 +7,8 @@ import {auth} from '../../Firebase/firebase';
 
 function LoginScreen({navigation}) {
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('real@gmail.com');
+    const [password, setPassword] = useState('mpbob123');
     const [error, setError] = useState('');
 
     const handleEmail = (text) => {

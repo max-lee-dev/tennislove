@@ -107,10 +107,9 @@ function HomeScreen({navigation}) {
 
                 }
                 contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <Text>{time.length}</Text>
 
                 {time.map((item, index) => (
-                    <View key={index}>
+                    <View style={styles.container} key={index}>
                         <Event title={title[index]} createdAt={createdWhen[index]}
                                creator={creator[index]}
                                description={description[index]}
@@ -138,7 +137,16 @@ const styles = StyleSheet.create({
         minHeight: '100%',
         display: 'flex',
         flexDirection: 'column',
+        contentContainerStyle: {
+            alignItems: 'flex-start',
+        },
 
+
+    },
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'flex-start',
     }
 })
 

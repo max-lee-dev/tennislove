@@ -131,7 +131,7 @@ function Event({title, createdAt, description, location, date, time, skill, crea
 const styles = StyleSheet.create({
     eventContainer: {
         paddingLeft: 20,
-        margin: 5,
+        marginBottom: 5,
         minWidth: '100%',
         minHeight: 200,
         backgroundColor: '#fff',

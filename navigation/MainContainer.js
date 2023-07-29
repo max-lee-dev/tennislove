@@ -120,7 +120,6 @@ function LogInStack({navigation}) {
 }
 
 export default function MainContainer() {
-    const loggedIn = false;
 
     return (
         <NavigationContainer>
