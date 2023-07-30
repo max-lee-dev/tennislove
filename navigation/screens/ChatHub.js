@@ -2,17 +2,18 @@ import * as React from 'react';
 import {useState, useEffect, useLayoutEffect, useCallback} from 'react';
 import {useCollectionData} from 'react-firebase-hooks/firestore';
 import ChatMessage from '../../components/ChatMessage';
-import {View, Text, Button, TouchableOpacity, StyleSheet, Modal, ScrollView} from 'react-native';
+import {View, Text, Button, TouchableOpacity, StyleSheet, Modal, ScrollView, Image} from 'react-native';
 import {auth} from '../../Firebase/firebase';
 import {db} from '../../Firebase/firebase';
 import {signOut} from 'firebase/auth';
 import ChatRoomButton from '../../components/ChatRoomButton';
 import {collection, addDoc, where, orderBy, query, onSnapshot} from "firebase/firestore";
 import Icon from 'react-native-vector-icons/Ionicons';
+import blankpfp from '../../assets/blankpfp.png';
 
 
 function ChatHub({navigation}) {
-    
+
     const usersRef = collection(db, "users");
 
     const [userInfo, setUserInfo] = useState(null);
@@ -88,6 +89,10 @@ function ChatHub({navigation}) {
 
     }
 
+    function test() {
+        console.log("test");
+    }
+
 
     return (
         <View>
@@ -113,11 +118,23 @@ function ChatHub({navigation}) {
                         </TouchableOpacity>
                         <ScrollView style={styles.insideModalView}>
                             <Text style={styles.modalText}>Create a Chat Room with people from {userInfo?.state}</Text>
-                            {users && users.map(user => <TouchableOpacity style={styles.Button}
-                                                                          onPress={() => createRoom(user)}
-                                                                          key={user?.uid}>
-                                    <Text>{user?.firstName} {user?.lastName}</Text>
-                                </TouchableOpacity>
+                            {users && users.map(user => <View style={styles.ButtonContainer}>
+
+
+                                    <TouchableOpacity
+                                        style={{flex: 1, flexDirection: 'row'}}
+                                        onPress={() => test()}>
+                                        <Image source={blankpfp} style={{width: 50, height: 50}}/>
+                                        <Text style={{paddingTop: 15}}> {user?.firstName} {user?.lastName}</Text>
+                                    </TouchableOpacity>
+
+
+                                    <TouchableOpacity style={styles.Button}
+                                                      onPress={() => createRoom(user)}
+                                                      key={user?.uid}>
+                                        <Text>Create room</Text>
+                                    </TouchableOpacity>
+                                </View>
                             )}
                         </ScrollView>
 
@@ -132,15 +149,27 @@ function ChatHub({navigation}) {
 
 const styles = StyleSheet.create({
     Button: {
-        width: "15%",
-        height: 40,
+        width: "35%",
+        height: 30,
         backgroundColor: '#fff',
         borderRadius: 10,
         borderWidth: 1,
-        margin: 5,
+        margin: 10,
         marginLeft: 20,
+        alignSelf: 'flex-end',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    ButtonContainer: {
+        margin: 10,
+        flex: 1,
+        flexDirection: 'row',
+        minHeight: 40,
+        width: '80%',
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        borderWidth: 1,
+
     },
     centeredView: {
         flex: 1,
