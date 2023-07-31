@@ -18,6 +18,7 @@ import LoginScreen from './screens/LoginScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import ChatScreen from "./screens/ChatScreen";
 import ChatHub from "./screens/ChatHub";
+import Profile from "./screens/Profile";
 
 
 const homeName = 'Home';
@@ -27,6 +28,8 @@ const addEventName = 'AddEvent'
 const signupName = 'Sign Up';
 const loginName = 'Log In';
 const loginStackName = 'Log In Stack';
+const profileName = 'Profile';
+const FeedStackName = 'Feed Stack';
 
 const chatScreenName = 'ChatScreen';
 const chatHubName = 'Chat Hub';
@@ -41,6 +44,16 @@ function ChatStack({navigation}) {
         <Stack.Navigator>
             <Stack.Screen name={chatHubName} component={ChatHub} options={{headerShown: false}}/>
             <Stack.Screen name={chatScreenName} component={ChatScreen} options={{headerShown: false}}/>
+            <Stack.Screen name={profileName} component={Profile} options={{headerShown: false}}/>
+        </Stack.Navigator>
+    )
+}
+
+function FeedStack({navigation}) {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name={homeName} component={HomeScreen} options={{headerShown: false}}/>
+            <Stack.Screen name={profileName} component={Profile} options={{headerShown: false}}/>
         </Stack.Navigator>
     )
 }
@@ -54,7 +67,7 @@ function HomeStack({navigation}) {
                 tabBarIcon: ({focused, color, size}) => {
                     let iconName;
 
-                    if (route.name === homeName) {
+                    if (route.name === FeedStackName) {
                         iconName = focused ? 'home' : 'home-outline';
                     } else if (route.name === chatHubStackName) {
                         iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
@@ -74,9 +87,11 @@ function HomeStack({navigation}) {
                 inactiveTintColor: 'gray'
             }}
         >
-            <Tab.Screen name={homeName} component={HomeScreen}
+            <Tab.Screen name={FeedStackName} component={FeedStack}
                         options={{
 
+                            title: 'Home',
+                            tabBarLabel: 'Home',
 
                             headerRight: () => (
                                 <View>
@@ -107,6 +122,7 @@ function HomeStack({navigation}) {
                         }}
             />
 
+
         </Tab.Navigator>
 
     )
@@ -135,7 +151,7 @@ export default function MainContainer() {
 
 
                 <Stack.Screen name={loginStackName} component={LogInStack} options={{headerShown: false}}/>
-                <Stack.Screen name={homeName} component={HomeStack} options={{headerShown: false}}/>
+                <Stack.Screen name={homeStackName} component={HomeStack} options={{headerShown: false}}/>
 
             </Stack.Navigator>
 

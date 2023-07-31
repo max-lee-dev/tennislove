@@ -5,9 +5,11 @@ import BackIcon from 'react-native-vector-icons/Feather'
 import {getFirestore, getDocs, doc, addDoc, setDoc, collection} from "firebase/firestore";
 import {auth} from '../../Firebase/firebase';
 import {db} from '../../Firebase/firebase';
-import {View, ScrollView, Text, TextInput, TouchableOpacity} from 'react-native';
+import {View, Image, ScrollView, Text, TextInput, TouchableOpacity} from 'react-native';
 import DropdownComponent from "../../components/DropdownComponent";
+import GenderDropdown from "../../components/GenderDropdown";
 import StatesDropdown from "../../components/StatesDropdown";
+import * as ImagePicker from 'react-native-image-picker';
 
 
 function SignupScreen({navigation}) {
@@ -24,6 +26,8 @@ function SignupScreen({navigation}) {
     const [selected, setSelected] = useState("");
     const [age, setAge] = useState('');
     const [error, setError] = useState('');
+    const [gender, setGender] = useState('');
+    const [photo, setPhoto] = useState(null);
 
 
     function onDropdownChange(selected) {
@@ -36,6 +40,11 @@ function SignupScreen({navigation}) {
         setState(selected);
     }
 
+    function onGenderChange(selected) {
+        console.log(selected)
+        setGender(selected);
+    }
+
 
     const handleFirstName = (text) => {
         setFirstName(text)
@@ -44,6 +53,7 @@ function SignupScreen({navigation}) {
     const handleLastName = (text) => {
         setLastName(text)
     }
+
 
     const handleEmail = (text) => {
         setEmail(text)
@@ -57,12 +67,22 @@ function SignupScreen({navigation}) {
         setConfirmPassword(text)
     }
 
-    const handleState = (text) => {
-        setState(text)
-    }
 
     const handleCity = (text) => {
         setCity(text)
+    }
+
+    function handleChoosePhoto() {
+        const options = {
+            noData: true,
+
+        };
+        ImagePicker.launchImageLibrary(options, response => {
+            console.log("res: " + response);
+            if (response.uri) {
+                setPhoto(response);
+            }
+        });
     }
 
     function validCredentials() {
@@ -155,8 +175,16 @@ function SignupScreen({navigation}) {
 
                     <DropdownComponent myfunction={onDropdownChange}/>
                     <StatesDropdown myfunction={onStateChange}/>
+                    <TextInput style={styles.textInput} onChangeText={handleCity} value={city}
+                               placeholderTextColor={"#949494"} placeholder="City"/>
+                    <GenderDropdown changeGender={onGenderChange}/>
 
                     <Text>{error}</Text>
+
+                    <TouchableOpacity style={styles.Button} onPress={handleChoosePhoto}>
+                        <Text style={styles.ButtonText}> Upload profile picture</Text>
+                        {photo && <Image source={{uri: photo.uri}} style={{width: 100, height: 100}}/>}
+                    </TouchableOpacity>
 
                     <TouchableOpacity style={styles.Button} onPress={createUser}>
                         <Text style={styles.ButtonText}> Create account</Text>

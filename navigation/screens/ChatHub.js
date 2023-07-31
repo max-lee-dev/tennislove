@@ -48,7 +48,6 @@ function ChatHub({navigation}) {
     async function createRoom(user) {
         const uids = [auth.currentUser.uid, user.uid];
         const sortedID = uids.sort().join('');
-        console.log("WORKED: ? " + sortedID);
 
         const newChatroom = {
             users: [auth.currentUser.uid, user.uid],
@@ -63,7 +62,6 @@ function ChatHub({navigation}) {
             chatrooms.forEach(chatroom => {
                 if (chatroom.roomID === sortedID) {
                     navigation.navigate('ChatScreen', {roomID: sortedID});
-                    console.log("already exists")
                     exists = true;
                     setModalVisible(false);
 
@@ -71,9 +69,7 @@ function ChatHub({navigation}) {
             })
             if (!exists) {
 
-                console.log("trying to add")
                 addDoc(chatroomRef, newChatroom).then((docRef) => {
-                    console.log("Document written with ID: ", docRef.id);
                     navigation.navigate('ChatScreen', {roomID: auth.currentUser.uid + user.uid})
                     setModalVisible(false);
 
@@ -89,8 +85,9 @@ function ChatHub({navigation}) {
 
     }
 
-    function test() {
-        console.log("test");
+    function VisitProfile(user) {
+        navigation.navigate('Profile', {userID: user.uid})
+        setModalVisible(false);
     }
 
 
@@ -123,7 +120,7 @@ function ChatHub({navigation}) {
 
                                     <TouchableOpacity
                                         style={{flex: 1, flexDirection: 'row'}}
-                                        onPress={() => test()}>
+                                        onPress={() => VisitProfile(user)}>
                                         <Image source={blankpfp} style={{width: 50, height: 50}}/>
                                         <Text style={{paddingTop: 15}}> {user?.firstName} {user?.lastName}</Text>
                                     </TouchableOpacity>

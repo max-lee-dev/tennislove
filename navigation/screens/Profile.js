@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, Image, TouchableOpacity, ScrollView} from 'react-native';
-import {auth, db} from '../Firebase/firebase';
+import {auth, db} from '../../Firebase/firebase';
 import {getFirestore, getDoc, doc, addDoc, setDoc, collection} from "firebase/firestore";
 
 function Profile({navigation, route}) {
@@ -28,7 +28,7 @@ function Profile({navigation, route}) {
             <View style={styles.body}>
                 <View style={styles.profile}>
                     <Image style={styles.profilePic}
-                           source={user?.profilePic ? {uri: user?.profilePic} : require('../assets/blankpfp.png')}/>
+                           source={user?.profilePic ? {uri: user?.profilePic} : require('../../assets/blankpfp.png')}/>
                     <Text style={styles.name}>{user?.firstName} {user?.lastName}</Text>
                     <Text style={styles.username}>@{user?.username}</Text>
                 </View>
@@ -38,5 +38,12 @@ function Profile({navigation, route}) {
 
 
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    }
+});
 
 export default Profile;

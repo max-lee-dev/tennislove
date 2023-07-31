@@ -1,28 +1,19 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
-import Feather from 'react-native-vector-icons/Feather';
+import Feather from 'react-native-vector-icons/Ionicons';
 
 
 const data = [
-    {label: '1.0', value: "1.0"},
-    {label: '1.5', value: "1.5"},
-    {label: '2.0', value: "2.0"},
-    {label: '2.5', value: "2.5"},
-    {label: '3.0', value: "3.0"},
-    {label: '3.5', value: "3.5"},
-    {label: '4.0', value: "4.0"},
-    {label: '4.5', value: "4.5"},
-    {label: '5.0', value: "5.0"},
-    {label: '5.5', value: "5.5"},
-    {label: '6.0', value: "6.0"},
-    {label: '6.5', value: "6.5"},
-    {label: '7.0', value: "7.0"},
+    {label: 'Male', value: 'Male'},
+    {label: 'Female', value: 'Female'},
+    {label: 'Other', value: 'Other'},
 
 
 ];
 
-const DropdownComponent = ({myfunction}) => {
+
+const GenderDropdown = ({changeGender}) => {
     const [value, setValue] = useState(null);
     const [isFocus, setIsFocus] = useState(false);
 
@@ -37,7 +28,7 @@ const DropdownComponent = ({myfunction}) => {
         }
         return null;
     };
-
+    //a
     return (
         <View style={styles.container}>
             {renderLabel()}
@@ -48,18 +39,18 @@ const DropdownComponent = ({myfunction}) => {
                 inputSearchStyle={styles.inputSearchStyle}
                 iconStyle={styles.iconStyle}
                 data={data}
-                search
                 dropdownPosition={"top"}
+                search
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
-                placeholder={!isFocus ? 'Select level' : '...'}
+                placeholder={!isFocus ? 'Select gender' : '...'}
                 searchPlaceholder="Search..."
                 value={value}
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
                 onChange={item => {
-                    myfunction(item.value);
+                    changeGender(item.value);
                     setValue(item.value);
                     setIsFocus(false);
                 }}
@@ -67,7 +58,7 @@ const DropdownComponent = ({myfunction}) => {
                     <Feather
                         style={styles.icon}
                         color={isFocus ? 'blue' : 'black'}
-                        name="bar-chart-2"
+                        name="person"
                         size={20}
                     />
                 )}
@@ -76,10 +67,11 @@ const DropdownComponent = ({myfunction}) => {
     );
 };
 
-export default DropdownComponent;
+export default GenderDropdown;
 
 const styles = StyleSheet.create({
     container: {
+        marginTop: 20,
 
         backgroundColor: 'white',
         width: '80%',

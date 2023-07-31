@@ -87,10 +87,11 @@ const StatesDropdown = ({myfunction}) => {
                 iconStyle={styles.iconStyle}
                 data={data}
                 search
+                dropdownPosition={'top'}
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
-                placeholder={!isFocus ? 'Select State' : '...'}
+                placeholder={!isFocus ? 'Select state' : '...'}
                 searchPlaceholder="Search..."
                 value={value}
                 onFocus={() => setIsFocus(true)}
@@ -104,7 +105,7 @@ const StatesDropdown = ({myfunction}) => {
                     <Feather
                         style={styles.icon}
                         color={isFocus ? 'blue' : 'black'}
-                        name="bar-chart-2"
+                        name="map-pin"
                         size={20}
                     />
                 )}
