@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import {signInWithEmailAndPassword, updateProfile, createUserWithEmailAndPassword} from 'firebase/auth';
 import BackIcon from 'react-native-vector-icons/Feather'
@@ -9,8 +9,10 @@ import {View, Image, ScrollView, Text, TextInput, TouchableOpacity} from 'react-
 import DropdownComponent from "../../components/DropdownComponent";
 import GenderDropdown from "../../components/GenderDropdown";
 import StatesDropdown from "../../components/StatesDropdown";
-import * as ImagePicker from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
+import blankpfp from '../../assets/blankpfp.png';
 
+import Constants from 'expo-constants';
 
 function SignupScreen({navigation}) {
 
@@ -28,6 +30,7 @@ function SignupScreen({navigation}) {
     const [error, setError] = useState('');
     const [gender, setGender] = useState('');
     const [photo, setPhoto] = useState(null);
+    const [askPhoto, setAskPhoto] = useState(false);
 
 
     function onDropdownChange(selected) {
@@ -72,17 +75,36 @@ function SignupScreen({navigation}) {
         setCity(text)
     }
 
-    function handleChoosePhoto() {
-        const options = {
-            noData: true,
+    useEffect(() => {
+        async function getPermission() {
+            if (Platform.OS !== 'web') {
+                const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Sorry, we need camera roll permissions to make this work!');
+                }
 
-        };
-        ImagePicker.launchImageLibrary(options, response => {
-            console.log("res: " + response);
-            if (response.uri) {
-                setPhoto(response);
             }
-        });
+        }
+
+        getPermission();
+    }, []);
+
+
+    async function handleChoosePhoto() {
+
+
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+
+        })
+        console.log(result)
+        if (!result.cancelled) {
+            setPhoto(result.uri);
+            console.log('went through')
+        }
     }
 
     function validCredentials() {
@@ -180,11 +202,22 @@ function SignupScreen({navigation}) {
                     <GenderDropdown changeGender={onGenderChange}/>
 
                     <Text>{error}</Text>
+                    <View style={{
+                        flex: 1,
+                        minWidth: '80%',
+                        flexDirection: 'row',
+                        justifyContent: 'center',
 
-                    <TouchableOpacity style={styles.Button} onPress={handleChoosePhoto}>
-                        <Text style={styles.ButtonText}> Upload profile picture</Text>
-                        {photo && <Image source={{uri: photo.uri}} style={{width: 100, height: 100}}/>}
-                    </TouchableOpacity>
+                    }}>
+                        <TouchableOpacity style={styles.PictureButton} onPress={() => handleChoosePhoto()}>
+                            <Text style={{textAlign: 'center', justifyContent: 'center', color: 'white'}}> Upload
+                                profile picture</Text>
+                        </TouchableOpacity>
+                        {photo && <Image source={{uri: photo}} style={{width: 100, height: 100}}/>}
+                        {!photo &&
+                            <Image source={require('../../assets/blankpfp.png')} style={{width: 100, height: 100}}/>}
+                    </View>
+
 
                     <TouchableOpacity style={styles.Button} onPress={createUser}>
                         <Text style={styles.ButtonText}> Create account</Text>
@@ -249,6 +282,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
 
     },
+    PictureButton: {
+        width: "30%",
+        height: 100,
+        borderWidth: 1,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderColor: '#fff',
+        borderRadius: 10,
+        marginRight: 80
+
+    },
+
     Button: {
         width: "80%",
         height: 50,
