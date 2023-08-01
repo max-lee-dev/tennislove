@@ -24,6 +24,7 @@ function HomeScreen({navigation}) {
     const [peopleNeeded, setPeopleNeeded] = useState([]);
     const [creatorUID, setCreatorUID] = useState([]);
     const [roomExists, setRoomExists] = useState(false);
+    const [creatorPfp, setCreatorPfp] = useState([]);
 
 
     useEffect(() => {
@@ -53,6 +54,7 @@ function HomeScreen({navigation}) {
         let tempDate = [];
         let tempPeopleNeeded = [];
         let tempCreatorUID = [];
+        let tempCreatorPfp = [];
 
         const eventCollectionRef = collection(db, "events");
         const sort = query(eventCollectionRef, orderBy("time", "desc"));
@@ -68,6 +70,8 @@ function HomeScreen({navigation}) {
             tempSkill.push(doc.data().skill);
             tempPeopleNeeded.push(doc.data().peopleNeeded);
             tempCreatorUID.push(doc.data().creatorUID);
+            tempCreatorPfp.push(doc.data().creatorPFP);
+
             let seconds = doc.data().date.seconds;
             let date = new Date(seconds * 1000);
             let dateString = date.toLocaleDateString();
@@ -95,9 +99,9 @@ function HomeScreen({navigation}) {
         setSkill(tempSkill);
         setPeopleNeeded(tempPeopleNeeded);
         setCreatorUID(tempCreatorUID);
+        setCreatorPfp(tempCreatorPfp);
 
         setDate(tempDate);
-        console.log(tempPeopleNeeded);
     }
 
     return (
@@ -127,6 +131,7 @@ function HomeScreen({navigation}) {
                             attendees={attendees[index]}
                             peopleNeeded={peopleNeeded[index]}
                             creatorUID={creatorUID[index]}
+                            creatorPfp={creatorPfp[index]}
 
                         />
                     </View>

@@ -11,6 +11,23 @@ import {TouchableOpacity} from "react-native-gesture-handler";
 import Icon from 'react-native-vector-icons/Ionicons';
 
 function ChatScreen({route, navigation}) {
+    const [userInfo, setUserInfo] = useState([]);
+
+    useEffect(() => {
+
+        const userCollectionRef = collection(db, "users");
+        const q = query(userCollectionRef, where("uid", "==", auth.currentUser.uid));
+        const unsub = onSnapshot(q, (querySnapshot) => {
+            const data = [];
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data());
+            });
+            setUserInfo(data);
+        });
+        return unsub;
+
+    }, []); // tihs prob broken
+
     const {roomID, pretext} = route.params;
     useEffect(() => {
         if (pretext) {
@@ -71,6 +88,7 @@ function ChatScreen({route, navigation}) {
             text: textInput,
             createdAt: new Date(),
             roomID: roomID,
+            senderPFP: userInfo.pfp,
             senderID: auth.currentUser.uid
         }
         setTextInput("");

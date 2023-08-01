@@ -1,14 +1,10 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
-import Feather from 'react-native-vector-icons/Feather';
+import Feather from 'react-native-vector-icons/Ionicons';
 
 const data = [
-    {label: '2010', 'value': '2010'},
-    {label: '2009', value: '2009'},
-    {label: '2008', value: '2008'},
-    {label: '2007', value: '2007'},
-    {label: '2006', value: '2006'},
+
     {label: '2005', value: '2005'},
 
     {label: '2004', value: '2004'},
@@ -55,7 +51,33 @@ const data = [
     {label: '1966', value: '1966'},
     {label: '1965', value: '1965'},
     {label: '1964', value: '1964'},
-    
+    {label: '1963', value: '1963'},
+    {label: '1962', value: '1962'},
+
+    {label: '1961', value: '1961'},
+    {label: '1960', value: '1960'},
+    {label: '1959', value: '1959'},
+    {label: '1958', value: '1958'},
+    {label: '1957', value: '1957'},
+    {label: '1956', value: '1956'},
+    {label: '1955', value: '1955'},
+    {label: '1954', value: '1954'},
+    {label: '1953', value: '1953'},
+    {label: '1952', value: '1952'},
+    {label: '1951', value: '1951'},
+    {label: '1950', value: '1950'},
+    {label: '1949', value: '1949'},
+    {label: '1948', value: '1948'},
+    {label: '1947', value: '1947'},
+
+    {label: '1946', value: '1946'},
+    {label: '1945', value: '1945'},
+    {label: '1944', value: '1944'},
+    {label: '1943', value: '1943'},
+    {label: '1942', value: '1942'},
+    {label: '1941', value: '1941'},
+    {label: '1940', value: '1940'},
+
 
 ];
 
@@ -88,8 +110,9 @@ const DOBDropdown = ({myfunction}) => {
                 search
                 maxHeight={300}
                 labelField="label"
+                dropdownPosition={'top'}
                 valueField="value"
-                placeholder={!isFocus ? 'Select level' : '...'}
+                placeholder={!isFocus ? 'Select birth year' : '...'}
                 searchPlaceholder="Search..."
                 value={value}
                 onFocus={() => setIsFocus(true)}
@@ -103,7 +126,7 @@ const DOBDropdown = ({myfunction}) => {
                     <Feather
                         style={styles.icon}
                         color={isFocus ? 'blue' : 'black'}
-                        name="bar-chart-2"
+                        name="today"
                         size={20}
                     />
                 )}
@@ -120,6 +143,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         width: '80%',
         borderRadius: 8,
+        margin: 20,
 
     },
     dropdown: {

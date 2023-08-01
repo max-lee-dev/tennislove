@@ -4,7 +4,7 @@ import {auth, db} from '../../Firebase/firebase';
 import {View, TextInput, Text, Button, ScrollView} from 'react-native';
 import GooglePlacesInput from "../../components/GooglePlacesInput";
 import DatePicker from '../../components/DatePicker'
-import {getFirestore, getDocs, doc, addDoc, setDoc, collection} from "firebase/firestore";
+import {getFirestore, getDocs, doc, addDoc, setDoc, collection, query, where, onSnapshot} from "firebase/firestore";
 import TimePicker from '../../components/TimePicker'
 import DropdownComponent from "../../components/DropdownComponent";
 import PeopleDropdown from "../../components/PeopleDropdown";
@@ -19,6 +19,20 @@ function AddEvent({navigation}) {
     const [skill, setSkill] = useState('');
     const [error, setError] = useState('');
     const [peopleNeeded, setPeopleNeeded] = useState('');
+    const [userInfo, setUserInfo] = useState({});
+
+    useEffect(() => {
+
+        const userCollectionRef = collection(db, "users");
+        const q = query(userCollectionRef, where("uid", "==", auth.currentUser.uid));
+        const unsub = onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                setUserInfo(doc.data());
+            });
+        });
+        return unsub;
+
+    }, []);
 
 
     const handleTitle = (text) => {
@@ -74,13 +88,13 @@ function AddEvent({navigation}) {
             createdWhen: new Date().toDateString(),
             peopleNeeded: peopleNeeded,
             creator: auth.currentUser.displayName,
+            creatorPFP: userInfo.pfp,
             creatorUID: auth.currentUser.uid
         });
         console.log("Document written with ID: ", docRef.id);
 
-        navigation.navigate('Home')
+        navigation.navigate('HomeStack', {screen: 'Home'})
     }
-
 
     return (
         <View style={{flex: 1, alignItems: 'center'}}>
@@ -90,7 +104,6 @@ function AddEvent({navigation}) {
                        placeholder={"Description"}/>
             <TextInput style={styles.textInput} onChangeText={handleLocation} value={location}
                        placeholder={"Location"}/>
-            <GooglePlacesInput/>
             <View style={{width: '80%', display: 'flex', flexDirection: 'row', justifyContent: "space-evenly"}}>
                 <DatePicker changeDate={handleDate}/>
                 <TimePicker changeTime={handleTime}/>

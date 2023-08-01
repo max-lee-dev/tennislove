@@ -33,7 +33,8 @@ function Event({
                    skill,
                    creator,
                    peopleNeeded,
-                   creatorUID
+                   creatorUID,
+                   creatorPfp,
                }) {
     let [fontsLoaded] = useFonts({
         LexendDeca_100Thin,
@@ -112,13 +113,15 @@ function Event({
 
     }
 
+    console.log("creatorPfp: " + creatorPfp)
     return (
         <View style={styles.eventContainer}>
             <View style={styles.HStack}>
 
                 <View style={styles.topLeftView}>
                     <View style={{marginRight: 5, marginLeft: 0}}>
-                        <Image source={blankpfp} style={{width: 50, height: 50}}/>
+                        {!creatorPfp && <Image source={blankpfp} style={{width: 50, height: 50}}/>}
+                        {creatorPfp && <Image source={{uri: creatorPfp}} style={{width: 50, height: 50}}/>}
                     </View>
                     <View style={{paddingTop: 5,}}>
                         <Text style={{fontFamily: 'LexendDeca_400Regular', fontSize: 18}}>{creator}</Text>

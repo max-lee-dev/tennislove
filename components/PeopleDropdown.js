@@ -76,7 +76,7 @@ export default PeopleDropdown;
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 20,
+        marginTop: 10,
 
         backgroundColor: 'white',
         width: '80%',

@@ -9,8 +9,10 @@ import {View, Image, ScrollView, Text, TextInput, TouchableOpacity} from 'react-
 import DropdownComponent from "../../components/DropdownComponent";
 import GenderDropdown from "../../components/GenderDropdown";
 import StatesDropdown from "../../components/StatesDropdown";
+import DOBDropdown from "../../components/DOBDropdown";
 import * as ImagePicker from 'expo-image-picker';
-import blankpfp from '../../assets/blankpfp.png';
+import {getStorage, ref, uploadBytes} from "firebase/storage";
+import {Divider} from '@rneui/themed';
 
 import Constants from 'expo-constants';
 
@@ -26,7 +28,7 @@ function SignupScreen({navigation}) {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [skill, setSkill] = useState('');
     const [selected, setSelected] = useState("");
-    const [age, setAge] = useState('');
+    const [dob, setDOB] = useState('');
     const [error, setError] = useState('');
     const [gender, setGender] = useState('');
     const [photo, setPhoto] = useState(null);
@@ -70,6 +72,11 @@ function SignupScreen({navigation}) {
         setConfirmPassword(text)
     }
 
+    const handleDOB = (text) => {
+        setDOB(text)
+        console.log(dob);
+    }
+
 
     const handleCity = (text) => {
         setCity(text)
@@ -102,6 +109,14 @@ function SignupScreen({navigation}) {
         })
         console.log(result)
         if (!result.cancelled) {
+            const storage = getStorage();
+            const trimmed = result.uri.substring(result.uri.lastIndexOf('/') + 1);
+            console.log("trim: " + trimmed)
+            const imgref = ref(storage, trimmed);
+
+            const img = await fetch(result.uri);
+            const blob = await img.blob();
+            await uploadBytes(imgref, blob);
             setPhoto(result.uri);
             console.log('went through')
         }
@@ -127,7 +142,21 @@ function SignupScreen({navigation}) {
         } else if (selected === '') {
             setError('Please select your skill level');
             return false;
+        } else if (state === '') {
+            setError('Please select your state');
+            return false;
+        } else if (city === '') {
+            setError('Please enter your city');
+            return false;
+        } else if (dob === '') {
+            setError('Please enter your year of birth');
+            return false;
+        } else if (gender === '') {
+
+            setError('Please enter your gender');
+            return false;
         }
+
         return true;
     }
 
@@ -137,7 +166,7 @@ function SignupScreen({navigation}) {
         createUserWithEmailAndPassword(auth, email, password).then((user) => {
             addUserToDB(user.user.uid);
             setError('');
-            navigation.navigate('Home');
+            navigation.navigate('HomeStack', {screen: 'Home'})
         }).catch((error) => {
             setError(error.message);
         });
@@ -154,7 +183,10 @@ function SignupScreen({navigation}) {
             state: state,
             city: city,
             skill: selected,
-            age: age,
+            yob: dob,
+            gender: gender,
+            pfp: photo,
+
             uid: uid
         }).then(() => {
             updateProfile(auth.currentUser, {displayName: firstName + " " + lastName}).catch(
@@ -200,22 +232,29 @@ function SignupScreen({navigation}) {
                     <TextInput style={styles.textInput} onChangeText={handleCity} value={city}
                                placeholderTextColor={"#949494"} placeholder="City"/>
                     <GenderDropdown changeGender={onGenderChange}/>
+                    <DOBDropdown myfunction={handleDOB}/>
+
 
                     <Text>{error}</Text>
                     <View style={{
                         flex: 1,
                         minWidth: '80%',
                         flexDirection: 'row',
-                        justifyContent: 'center',
+                        justifyContent: 'space-evenly',
 
                     }}>
                         <TouchableOpacity style={styles.PictureButton} onPress={() => handleChoosePhoto()}>
                             <Text style={{textAlign: 'center', justifyContent: 'center', color: 'white'}}> Upload
                                 profile picture</Text>
+
                         </TouchableOpacity>
-                        {photo && <Image source={{uri: photo}} style={{width: 100, height: 100}}/>}
-                        {!photo &&
-                            <Image source={require('../../assets/blankpfp.png')} style={{width: 100, height: 100}}/>}
+                        <View>
+                            {photo && <Image source={{uri: photo}} style={{width: 100, height: 100}}/>}
+                            {!photo &&
+                                <Image source={require('../../assets/blankpfp.png')}
+                                       style={{width: 100, height: 100}}/>}
+
+                        </View>
                     </View>
 
 
