@@ -11,7 +11,7 @@ import GenderDropdown from "../../components/GenderDropdown";
 import StatesDropdown from "../../components/StatesDropdown";
 import DOBDropdown from "../../components/DOBDropdown";
 import * as ImagePicker from 'expo-image-picker';
-import {getStorage, ref, uploadBytes} from "firebase/storage";
+import {getStorage, ref, uploadBytes, listAll, getDownloadURL} from "firebase/storage";
 import {Divider} from '@rneui/themed';
 
 import Constants from 'expo-constants';
@@ -33,6 +33,7 @@ function SignupScreen({navigation}) {
     const [gender, setGender] = useState('');
     const [photo, setPhoto] = useState(null);
     const [askPhoto, setAskPhoto] = useState(false);
+    const [photoURL, setPhotoURL] = useState(null);
 
 
     function onDropdownChange(selected) {
@@ -108,19 +109,32 @@ function SignupScreen({navigation}) {
 
         })
         console.log(result)
-        if (!result.cancelled) {
+        if (!result.canceled) {
             const storage = getStorage();
             const trimmed = result.uri.substring(result.uri.lastIndexOf('/') + 1);
-            console.log("trim: " + trimmed)
-            const imgref = ref(storage, trimmed);
+            const imgref = ref(storage, `images/${trimmed}`);
 
             const img = await fetch(result.uri);
             const blob = await img.blob();
-            await uploadBytes(imgref, blob);
-            setPhoto(result.uri);
-            console.log('went through')
+            await uploadBytes(imgref, blob).then(() => {
+                setPhotoURL(`images/${trimmed}`);
+                console.log('went through')
+
+
+            });
         }
     }
+
+    useEffect(() => {
+        listAll(ref(getStorage(), 'images')).then((res) => {
+            res.items.forEach((itemRef) => {
+                if (itemRef.fullPath === photoURL) getDownloadURL(itemRef).then((url) => {
+                    setPhoto(url)
+                    console.log('found match')
+                });
+            });
+        })
+    }, [photoURL])
 
     function validCredentials() {
         if (firstName === '') {

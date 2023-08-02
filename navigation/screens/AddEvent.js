@@ -90,10 +90,12 @@ function AddEvent({navigation}) {
             creator: auth.currentUser.displayName,
             creatorPFP: userInfo.pfp,
             creatorUID: auth.currentUser.uid
-        });
-        console.log("Document written with ID: ", docRef.id);
+        }).then((docRef) => {
+            console.log("Document written with ID: ", docRef.id);
 
-        navigation.navigate('HomeStack', {screen: 'Home'})
+            navigation.navigate('Feed Stack', {screen: 'Home'})
+        });
+
     }
 
     return (
