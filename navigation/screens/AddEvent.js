@@ -93,7 +93,7 @@ function AddEvent({navigation}) {
         }).then((docRef) => {
             console.log("Document written with ID: ", docRef.id);
 
-            navigation.navigate('Feed Stack', {screen: 'Home'})
+            navigation.navigate('Feed Stack', {screen: 'Home', params: {refresh: true}})
         });
 
     }

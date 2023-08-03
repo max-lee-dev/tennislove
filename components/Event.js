@@ -56,8 +56,8 @@ function Event({
     const chatroomRef = collection(db, "chatrooms");
     const myChatRooms = query(chatroomRef, where("users", "array-contains", auth.currentUser.uid));
 
-
     async function sendRequest() {
+        console.log('send request')
 
         const uids = [auth.currentUser.uid, creatorUID];
         const sortedID = uids.sort().join('');
@@ -69,28 +69,30 @@ function Event({
             roomID: sortedID
         }
 
-        if (myChatRooms) {
-            let loading = true;
-            let exists = false;
-            await onSnapshot(myChatRooms, (querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    if (doc.data().roomID === sortedID) {
-                        console.log("chatroom exists, go to chatroom")
-                        navigation?.navigate('Chat Hub Stack', {
-                            screen: 'ChatScreen',
-                            params: {
-                                roomID: sortedID,
-                                pretext: "Hey! I'm interested in your " + location + " event on " + strippedDate + " at " + time + "!"
-                            }
-                        });
-                        exists = true;
-                    }
-                });
-                loading = false;
-            })
+        let loading = true;
+        let hasSingleChatroom = true;
+        let exists = false;
+        console.log('Should be 1')
 
+        await onSnapshot(myChatRooms, (querySnapshot) => {
+            console.log('Should be 2')
 
-            if (!exists && !loading) {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().roomID === sortedID) {
+                    console.log("chatroom exists, go to chatroom")
+                    navigation?.navigate('Chat Hub Stack', {
+                        screen: 'ChatScreen',
+                        params: {
+                            roomID: sortedID,
+                            pretext: "Hey! I'm interested in your " + location + " event on " + strippedDate + " at " + time + "!"
+                        }
+                    });
+                    exists = true;
+                }
+            });
+            console.log('Should be 3')
+            if (!exists) {
+                console.log("Should be 4: " + exists, loading, hasSingleChatroom)
 
                 console.log("chatroom doesnt exist yet, add")
                 addDoc(chatroomRef, newChatroom).then((docRef) => {
@@ -105,10 +107,8 @@ function Event({
                     console.error("Error adding document: ", error);
                 });
 
-
             }
-
-        }
+        });
 
 
     }
@@ -120,8 +120,9 @@ function Event({
 
                 <View style={styles.topLeftView}>
                     <View style={{marginRight: 5, marginLeft: 0}}>
-                        {!creatorPfp && <Image source={blankpfp} style={{width: 50, height: 50}}/>}
-                        {creatorPfp && <Image source={{uri: creatorPfp}} style={{width: 50, height: 50}}/>}
+                        {!creatorPfp && <Image source={blankpfp} style={{width: 50, height: 50, borderRadius: 50}}/>}
+                        {creatorPfp &&
+                            <Image source={{uri: creatorPfp}} style={{width: 50, height: 50, borderRadius: 50}}/>}
                     </View>
                     <View style={{paddingTop: 5,}}>
                         <Text style={{fontFamily: 'LexendDeca_400Regular', fontSize: 18}}>{creator}</Text>
@@ -199,8 +200,9 @@ function Event({
 
 
                 </View>
-                <TouchableOpacity onPress={() => sendRequest()} style={styles.Button}>
-                    <Icon name={'send'} size={25} color="black"/>
+                <TouchableOpacity disabled={creatorUID === auth.currentUser.uid} onPress={() => sendRequest()}
+                                  style={creatorUID === auth.currentUser.uid ? styles.DisabledButton : styles.Button}>
+                    <Icon name={'send'} size={25} color={creatorUID === auth.currentUser.uid ? "gray" : "black"}/>
                 </TouchableOpacity>
             </View>
 
@@ -214,14 +216,41 @@ const styles = StyleSheet.create({
     eventContainer: {
         paddingLeft: 20,
         marginBottom: 5,
+        paddingTop: 5,
         minWidth: '100%',
         minHeight: 250,
         backgroundColor: '#fff',
 
     },
+
+    DisabledButton: {
+        width: "15%",
+        height: 40,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        borderWidth: 1,
+        margin: 5,
+        marginLeft: 20,
+        borderColor: 'gray',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     HStack: {
         display: 'flex',
         flexDirection: 'row',
+
+    },
+    pfpContainer: {
+        width: 50,
+        height: 50,
+        borderRadius: 50,
+        backgroundColor: '#000',
+        marginRight: 10,
+    },
+    pfp: {
+        width: 50,
+        height: 50,
+        borderRadius: 50,
 
     },
     font: {

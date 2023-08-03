@@ -10,7 +10,7 @@ import {getFirestore, getDocs, doc, addDoc, setDoc, collection, where, query, or
 
 import {db} from '../../Firebase/firebase';
 
-function HomeScreen({navigation}) {
+function HomeScreen({navigation, route}) {
     const [refreshing, setRefreshing] = useState(false);
     const [time, setTime] = useState([]);
     const [attendees, setAttendees] = useState([]);
@@ -25,6 +25,13 @@ function HomeScreen({navigation}) {
     const [creatorUID, setCreatorUID] = useState([]);
     const [roomExists, setRoomExists] = useState(false);
     const [creatorPfp, setCreatorPfp] = useState([]);
+
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getEvents()
+        }, [])
+    );
 
 
     useEffect(() => {

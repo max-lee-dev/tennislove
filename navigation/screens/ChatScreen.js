@@ -18,11 +18,9 @@ function ChatScreen({route, navigation}) {
         const userCollectionRef = collection(db, "users");
         const q = query(userCollectionRef, where("uid", "==", auth.currentUser.uid));
         const unsub = onSnapshot(q, (querySnapshot) => {
-            const data = [];
             querySnapshot.forEach((doc) => {
-                data.push(doc.data());
+                setUserInfo(doc.data());
             });
-            setUserInfo(data);
         });
         return unsub;
 
@@ -109,8 +107,9 @@ function ChatScreen({route, navigation}) {
                         ref={ref}
                         onContentSizeChange={() => ref.current?.scrollToEnd({animated: true})}
             >
-                {messages && messages.map(msg => <ChatMessage key={msg.id} senderID={msg.senderID} ogRoom={roomID}
-                                                              msgRoomId={msg.roomID} message={msg.text}
+                {messages && messages.map(msg => <ChatMessage senderID={msg.senderID} ogRoom={roomID}
+                                                              pfp={msg.senderPFP} msgRoomId={msg.roomID}
+                                                              message={msg.text} createdAt={msg.createdAt} key={msg.id}
                 />)}
 
             </ScrollView>
