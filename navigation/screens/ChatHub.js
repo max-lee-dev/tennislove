@@ -36,9 +36,10 @@ function ChatHub({navigation}) {
     if (userInfo?.state) {
 
 
-        usersQuery = query(usersRef, where("state", "!=", userInfo?.state)); // change to == later
+        usersQuery = query(usersRef, where("state", "==", userInfo?.state)); // change to == later
     }
-    const [users] = useCollectionData(usersQuery, {idField: 'id'});
+    const notMe = query(usersRef, where("uid", "!=", auth.currentUser?.uid));
+    const [users] = useCollectionData(notMe, {idField: 'id'});
 
     function logout() {
         navigation.navigate('Log In');
@@ -119,10 +120,13 @@ function ChatHub({navigation}) {
 
 
                                     <TouchableOpacity
-                                        style={{flex: 1, flexDirection: 'row'}}
+                                        style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}
                                         onPress={() => VisitProfile(user)}>
-                                        <Image source={blankpfp} style={{width: 50, height: 50}}/>
-                                        <Text style={{paddingTop: 15}}> {user?.firstName} {user?.lastName}</Text>
+                                        {user?.pfp ? <Image source={{uri: user?.pfp}}
+                                                            style={{width: 40, height: 40, borderRadius: 50}}/> :
+                                            <Image source={blankpfp} style={{width: 40, height: 40, borderRadius: 50}}/>}
+
+                                        <Text> {user?.firstName} {user?.lastName}</Text>
                                     </TouchableOpacity>
 
 

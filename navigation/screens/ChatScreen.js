@@ -97,17 +97,23 @@ function ChatScreen({route, navigation}) {
 
     }
 
+    function goback() {
+        navigation.navigate('Chat Hub Stack', {screen: 'Chat Hub'});
+    }
+
 
     return (
         <View style={{backgroundColor: '#fff', minHeight: '100%'}}>
             <View style={{display: 'flex', alignSelf: 'center'}}>
                 <Text>room id: {roomID}</Text>
+                <Button title={'back'} onPress={goback}></Button>
             </View>
             <ScrollView style={isKeyboardVisible ? styles.keyboardShownView : styles.keyboardHiddenView}
                         ref={ref}
                         onContentSizeChange={() => ref.current?.scrollToEnd({animated: true})}
             >
-                {messages && messages.map(msg => <ChatMessage senderID={msg.senderID} ogRoom={roomID}
+                {messages && messages.map(msg => <ChatMessage navigation={navigation} senderID={msg.senderID}
+                                                              ogRoom={roomID}
                                                               pfp={msg.senderPFP} msgRoomId={msg.roomID}
                                                               message={msg.text} createdAt={msg.createdAt} key={msg.id}
                 />)}

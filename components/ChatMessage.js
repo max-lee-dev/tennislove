@@ -1,8 +1,9 @@
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, Touchable} from 'react-native';
 import {auth} from '../Firebase/firebase'
 import blankpfp from '../assets/blankpfp.png';
+import {TouchableOpacity} from "react-native-gesture-handler";
 
-function ChatMessage({pfp, senderID, ogRoom, msgRoomId, message, createdAt}) {
+function ChatMessage({navigation, pfp, senderID, ogRoom, msgRoomId, message, createdAt}) {
     let thisRoom = ogRoom === msgRoomId;
     let thisUser = senderID === auth.currentUser?.uid;
     let when = createdAt.toDate().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
@@ -29,7 +30,9 @@ function ChatMessage({pfp, senderID, ogRoom, msgRoomId, message, createdAt}) {
             {thisRoom && !thisUser &&
                 <View style={styles.theirMessageContainer}>
                     <View style={styles.pfpContainer}>
-                        <Image source={pfp ? {uri: pfp} : blankpfp} style={styles.pfp}/>
+                        <TouchableOpacity onPress={() => navigation.navigate('Profile', {userID: senderID})}>
+                            <Image source={pfp ? {uri: pfp} : blankpfp} style={styles.pfp}/>
+                        </TouchableOpacity>
                     </View>
                     <View style={{width: '100%'}}>
                         <View style={{
@@ -73,15 +76,16 @@ const styles = StyleSheet.create({
 
     },
     pfpContainer: {
-        width: 50,
-        height: 50,
+        width: 35,
+        height: 35,
+        marginTop: 5,
         borderRadius: 50,
         backgroundColor: '#000',
         marginRight: 10,
     },
     pfp: {
-        width: 50,
-        height: 50,
+        width: 35,
+        height: 35,
         borderRadius: 50,
 
     },

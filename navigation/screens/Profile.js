@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, Image, TouchableOpacity, ScrollView} from 'react-native';
 import {auth, db} from '../../Firebase/firebase';
 import {getFirestore, getDoc, doc, addDoc, setDoc, collection} from "firebase/firestore";
+import blankpfp from '../../assets/blankpfp.png';
 
 function Profile({navigation, route}) {
     const {userID} = route.params;
@@ -27,8 +28,11 @@ function Profile({navigation, route}) {
             </View>
             <View style={styles.body}>
                 <View style={styles.profile}>
-                    <Image style={styles.profilePic}
-                           source={user?.profilePic ? {uri: user?.profilePic} : require('../../assets/blankpfp.png')}/>
+                    {user?.pfp ?
+                        <Image source={{uri: user.pfp}}
+                               style={{width: 100, height: 100, borderRadius: 50}}/> :
+                        <Image source={blankpfp} style={{width: 100, height: 100, borderRadius: 50}}/>}
+
                     <Text style={styles.name}>{user?.firstName} {user?.lastName}</Text>
                     <Text style={styles.username}>@{user?.username}</Text>
                 </View>

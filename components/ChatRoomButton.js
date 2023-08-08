@@ -1,10 +1,11 @@
-import {View, TouchableOpacity, Text, StyleSheet} from "react-native";
+import {View, TouchableOpacity, Text, StyleSheet, Image} from "react-native";
 import {db, auth} from "../Firebase/firebase";
 import {collection, addDoc, where, orderBy, query, onSnapshot} from "firebase/firestore";
 import {useEffect, useState} from "react";
+import blankpfp from "../assets/blankpfp.png";
 
 function ChatRoomButton({navigation, chatroom}) {
-    const [otherUsername, setOtherUsername] = useState("");
+    const [otherUserInfo, setOtherUserInfo] = useState(null);
     console.log("chatroom: " + chatroom.users[0] + " " + chatroom.users[1]);
     let otherUser;
     if (chatroom.users[0] === auth.currentUser?.uid) {
@@ -19,7 +20,7 @@ function ChatRoomButton({navigation, chatroom}) {
         const snapshot = onSnapshot(thisUserInfo, (querySnapshot) => {
             querySnapshot.forEach((doc) => {
 
-                setOtherUsername(doc.data().firstName + " " + doc.data().lastName);
+                setOtherUserInfo(doc.data());
             });
         });
     }, []);
@@ -31,7 +32,17 @@ function ChatRoomButton({navigation, chatroom}) {
                     roomID: chatroom.roomID,
                 }
             )}>
-                <Text>{otherUsername}</Text>
+                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-evenly'}}>
+                    <View>
+                        {otherUserInfo?.pfp ?
+                            <Image source={{uri: otherUserInfo.pfp}}
+                                   style={{width: 35, height: 35, borderRadius: 20}}/> :
+                            <Image source={blankpfp} style={{width: 40, height: 40, borderRadius: 20}}/>}
+                    </View>
+                    <View>
+                        <Text>{otherUserInfo?.firstName} {otherUserInfo?.lastName}</Text>
+                    </View>
+                </View>
             </TouchableOpacity>
         </View>
     )

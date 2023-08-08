@@ -42,9 +42,13 @@ const Stack = createStackNavigator();
 function ChatStack({navigation}) {
     return (
         <Stack.Navigator>
-            <Stack.Screen name={chatHubName} component={ChatHub} options={{headerShown: false}}/>
-            <Stack.Screen name={chatScreenName} component={ChatScreen} options={{headerShown: false}}/>
-            <Stack.Screen name={profileName} component={Profile} options={{headerShown: false}}/>
+            <Stack.Screen name={chatHubName} component={ChatHub} options={{
+                title: 'Chats',
+            }}/>
+            <Stack.Screen name={chatScreenName} component={ChatScreen} options={{
+                headerTitle: 'Messages',
+            }}/>
+            <Stack.Screen name={profileName} component={Profile}/>
         </Stack.Navigator>
     )
 }
@@ -52,8 +56,19 @@ function ChatStack({navigation}) {
 function FeedStack({navigation}) {
     return (
         <Stack.Navigator>
-            <Stack.Screen name={homeName} component={HomeScreen} options={{headerShown: false}}/>
-            <Stack.Screen name={profileName} component={Profile} options={{headerShown: false}}/>
+            <Stack.Screen name={homeName} component={HomeScreen} options={
+                {
+                    headerRight: () => (
+                        <View>
+                            <Ionicons name={'cog'} size={30} color={'black'} onPress={() => {
+                                navigation.navigate(settingsName)
+                            }
+                            }/>
+                        </View>
+                    ),
+                }
+            }/>
+            <Stack.Screen name={profileName} component={Profile}/>
         </Stack.Navigator>
     )
 }
@@ -89,18 +104,11 @@ function HomeStack({navigation}) {
         >
             <Tab.Screen name={FeedStackName} component={FeedStack}
                         options={{
-
                             title: 'Home',
-                            tabBarLabel: 'Home',
 
-                            headerRight: () => (
-                                <View>
-                                    <Ionicons name={'cog'} size={30} color={'black'} onPress={() => {
-                                        navigation.navigate(settingsName)
-                                    }
-                                    }/>
-                                </View>
-                            ),
+                            headerShown: false,
+
+
                         }}
             />
 
@@ -109,6 +117,7 @@ function HomeStack({navigation}) {
                         options={{
                             title: 'Add Event',
                             tabBarLabel: 'Add',
+
                         }}
             />
 
@@ -116,6 +125,7 @@ function HomeStack({navigation}) {
             <Tab.Screen name={chatHubStackName} component={ChatStack}
 
                         options={{
+                            headerShown: false,
                             title: 'Messages',
                             tabBarLabel: 'Messages',
 
@@ -150,8 +160,10 @@ export default function MainContainer() {
             >
 
 
-                <Stack.Screen name={loginStackName} component={LogInStack} options={{headerShown: false}}/>
-                <Stack.Screen name={homeStackName} component={HomeStack} options={{headerShown: false}}/>
+                {!auth.currentUser &&
+                    <Stack.Screen name={loginStackName} component={LogInStack} options={{headerShown: false}}/>}
+                {auth.currentUser &&
+                    <Stack.Screen name={homeStackName} component={HomeStack} options={{headerShown: false}}/>}
 
             </Stack.Navigator>
 

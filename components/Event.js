@@ -113,21 +113,36 @@ function Event({
 
     }
 
-    console.log("creatorPfp: " + creatorPfp)
     return (
         <View style={styles.eventContainer}>
             <View style={styles.HStack}>
 
-                <View style={styles.topLeftView}>
-                    <View style={{marginRight: 5, marginLeft: 0}}>
-                        {!creatorPfp && <Image source={blankpfp} style={{width: 50, height: 50, borderRadius: 50}}/>}
-                        {creatorPfp &&
-                            <Image source={{uri: creatorPfp}} style={{width: 50, height: 50, borderRadius: 50}}/>}
-                    </View>
-                    <View style={{paddingTop: 5,}}>
-                        <Text style={{fontFamily: 'LexendDeca_400Regular', fontSize: 18}}>{creator}</Text>
-                        <Text style={styles.font}>{createdAt}</Text>
-                    </View>
+                <View>
+                    <TouchableOpacity style={styles.topLeftView}
+                                      onPress={() => navigation.navigate('Profile', {userID: creatorUID})}>
+
+                        <View style={{marginRight: 5, marginLeft: 0}}>
+
+                            {!creatorPfp &&
+                                <Image source={blankpfp} style={{
+                                    width: 40, height: 40, marginTop: 5,
+                                    marginRight: 5, borderRadius: 50
+                                }}/>}
+                            {creatorPfp &&
+                                <Image source={{uri: creatorPfp}}
+                                       style={{
+                                           width: 40,
+                                           height: 40,
+                                           marginTop: 5,
+                                           marginRight: 5,
+                                           borderRadius: 50
+                                       }}/>}
+                        </View>
+                        <View style={{paddingTop: 5,}}>
+                            <Text style={{fontFamily: 'LexendDeca_400Regular', fontSize: 18}}>{creator}</Text>
+                            <Text style={styles.font}>{createdAt}</Text>
+                        </View>
+                    </TouchableOpacity>
 
                 </View>
 
