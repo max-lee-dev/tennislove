@@ -29,6 +29,7 @@ function ChatRoomButton({navigation, chatroom}) {
         <View>
             <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('ChatScreen',
                 {
+                    otherUID: otherUserInfo.uid,
                     roomID: chatroom.roomID,
                 }
             )}>

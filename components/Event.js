@@ -230,7 +230,6 @@ function Event({
 const styles = StyleSheet.create({
     eventContainer: {
         paddingLeft: 20,
-        marginBottom: 5,
         paddingTop: 5,
         minWidth: '100%',
         minHeight: 250,

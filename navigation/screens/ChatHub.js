@@ -62,7 +62,7 @@ function ChatHub({navigation}) {
 
             chatrooms.forEach(chatroom => {
                 if (chatroom.roomID === sortedID) {
-                    navigation.navigate('ChatScreen', {roomID: sortedID});
+                    navigation.navigate('ChatScreen', {roomID: sortedID, otherUID: user.uid});
                     exists = true;
                     setModalVisible(false);
 
@@ -71,7 +71,7 @@ function ChatHub({navigation}) {
             if (!exists) {
 
                 addDoc(chatroomRef, newChatroom).then((docRef) => {
-                    navigation.navigate('ChatScreen', {roomID: auth.currentUser.uid + user.uid})
+                    navigation.navigate('ChatScreen', {roomID: auth.currentUser.uid + user.uid, otherUID: user.uid});
                     setModalVisible(false);
 
 

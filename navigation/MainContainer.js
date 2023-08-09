@@ -47,6 +47,7 @@ function ChatStack({navigation}) {
             }}/>
             <Stack.Screen name={chatScreenName} component={ChatScreen} options={{
                 headerTitle: 'Messages',
+                headerShown: false,
             }}/>
             <Stack.Screen name={profileName} component={Profile}/>
         </Stack.Navigator>

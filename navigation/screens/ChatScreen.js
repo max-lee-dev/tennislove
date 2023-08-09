@@ -2,16 +2,19 @@ import * as React from 'react';
 import {useState, useEffect, useLayoutEffect, useCallback, useRef} from 'react';
 import {useCollectionData} from 'react-firebase-hooks/firestore';
 import ChatMessage from '../../components/ChatMessage';
-import {View, Text, Button, Keyboard, StyleSheet, TextInput, ScrollView} from 'react-native';
+import {View, Text, Button, Keyboard, StyleSheet, TextInput, ScrollView, Image, SafeAreaView} from 'react-native';
 import {auth} from '../../Firebase/firebase';
 import {db} from '../../Firebase/firebase';
 import {signOut} from 'firebase/auth';
 import {collection, addDoc, where, getDocs, orderBy, query, onSnapshot} from "firebase/firestore";
 import {TouchableOpacity} from "react-native-gesture-handler";
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/Feather';
+import {BlurView} from 'expo-blur';
+import {blankpfp} from '../../assets/blankpfp.png';
 
 function ChatScreen({route, navigation}) {
     const [userInfo, setUserInfo] = useState([]);
+    const [otherUserInfo, setOtherUserInfo] = useState([]);
 
     useEffect(() => {
 
@@ -22,11 +25,21 @@ function ChatScreen({route, navigation}) {
                 setUserInfo(doc.data());
             });
         });
+
+        const otherUser = query(userCollectionRef, where("uid", "==", route.params.otherUID));
+        const unsub2 = onSnapshot(otherUser, (querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    setOtherUserInfo(doc.data());
+                });
+            }
+        );
+
         return unsub;
 
     }, []); // tihs prob broken
 
-    const {roomID, pretext} = route.params;
+
+    const {roomID, pretext, otherUID} = route.params;
     useEffect(() => {
         if (pretext) {
             setTextInput(pretext);
@@ -76,10 +89,6 @@ function ChatScreen({route, navigation}) {
 
     //
 
-    function logout() {
-        navigation.navigate('Log In');
-        signOut(auth);
-    }
 
     async function sendMessage() {
         const newMessage = {
@@ -97,17 +106,52 @@ function ChatScreen({route, navigation}) {
 
     }
 
-    function goback() {
-        navigation.navigate('Chat Hub Stack', {screen: 'Chat Hub'});
-    }
-
 
     return (
-        <View style={{backgroundColor: '#fff', minHeight: '100%'}}>
-            <View style={{display: 'flex', alignSelf: 'center'}}>
-                <Text>room id: {roomID}</Text>
-                <Button title={'back'} onPress={goback}></Button>
-            </View>
+        <SafeAreaView style={{backgroundColor: '#fff', height: '100%'}}>
+            <BlurView intensity={90}
+                      tint="light" style={{
+
+                width: '100%',
+                height: '13%',
+
+            }}>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={{paddingLeft: 10}}>
+                    <Icon name="chevron-left" size={35} color={"#007AFF"}/>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Profile', {userID: otherUID})}>
+
+                    <View style={{
+                        alignItems: 'center',
+                        flexDirection: 'row',
+
+
+                        justifyContent: 'center',
+                    }}>
+
+                        {otherUserInfo.pfp ? <Image source={{uri: otherUserInfo.pfp}} style={{
+                            width: 30,
+
+                            height: 30,
+                            borderRadius: 50,
+                            marginRight: 10,
+                        }}/> : <Image source={blankpfp} style={{
+                            width: 30,
+                            height: 30,
+                            borderRadius: 50,
+                            marginRight: 10,
+                        }}/>
+
+                        }
+                        <Text style={{
+                            color: '#000',
+                            fontSize: 18,
+                            fontFamily: 'LexendDeca_400Regular',
+                        }}>{otherUserInfo.firstName} {otherUserInfo.lastName}</Text>
+                    </View>
+                </TouchableOpacity>
+
+            </BlurView>
             <ScrollView style={isKeyboardVisible ? styles.keyboardShownView : styles.keyboardHiddenView}
                         ref={ref}
                         onContentSizeChange={() => ref.current?.scrollToEnd({animated: true})}
@@ -123,15 +167,15 @@ function ChatScreen({route, navigation}) {
             <View style={styles.formContainer}>
                 <TextInput style={styles.textInput} onChangeText={setTextInput} value={textInput}/>
 
-                <TouchableOpacity onPress={() => sendMessage()} style={{paddingRight: 5, paddingTop: 2}}>
-                    <Icon name="send" size={30} color="#000"/>
+                <TouchableOpacity onPress={() => sendMessage()} style={{paddingRight: 10, paddingTop: 5}}>
+                    <Icon name="send" size={25} color="#000"/>
                 </TouchableOpacity>
 
 
             </View>
 
 
-        </View>
+        </SafeAreaView>
     )
 }
 
