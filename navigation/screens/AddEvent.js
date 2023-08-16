@@ -115,6 +115,7 @@ function AddEvent({navigation}) {
             </View>
             <PeopleDropdown changePeople={handlePeopleNeeded}/>
 
+
             <Button title={"Add Event"} onPress={handleAddEvent}/>
             <Text>{error}</Text>
         </View>

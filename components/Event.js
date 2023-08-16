@@ -84,6 +84,7 @@ function Event({
                         screen: 'ChatScreen',
                         params: {
                             roomID: sortedID,
+                            otherUID: creatorUID,
                             pretext: "Hey! I'm interested in your " + location + " event on " + strippedDate + " at " + time + "!"
                         }
                     });
@@ -99,7 +100,11 @@ function Event({
                     console.log("Document written with ID WTF: ", docRef.id);
                     navigation.navigate('Chat Hub Stack', {
                         screen: "ChatScreen",
-                        params: {roomID: auth.currentUser.uid + creatorUID}
+                        params: {
+                            roomID: auth.currentUser.uid + creatorUID,
+                            otherUID: creatorUID,
+                            pretext: "Hey! I'm interested in your " + location + " event on " + strippedDate + " at " + time + "!"
+                        }
                     })
 
 

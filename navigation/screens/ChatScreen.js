@@ -13,6 +13,8 @@ import {BlurView} from 'expo-blur';
 import {blankpfp} from '../../assets/blankpfp.png';
 
 function ChatScreen({route, navigation}) {
+    const {roomID, pretext, otherUID} = route.params;
+
     const [userInfo, setUserInfo] = useState([]);
     const [otherUserInfo, setOtherUserInfo] = useState([]);
 
@@ -39,7 +41,6 @@ function ChatScreen({route, navigation}) {
     }, []); // tihs prob broken
 
 
-    const {roomID, pretext, otherUID} = route.params;
     useEffect(() => {
         if (pretext) {
             setTextInput(pretext);

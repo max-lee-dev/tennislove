@@ -163,8 +163,7 @@ export default function MainContainer() {
 
                 {!auth.currentUser &&
                     <Stack.Screen name={loginStackName} component={LogInStack} options={{headerShown: false}}/>}
-                {auth.currentUser &&
-                    <Stack.Screen name={homeStackName} component={HomeStack} options={{headerShown: false}}/>}
+                <Stack.Screen name={homeStackName} component={HomeStack} options={{headerShown: false}}/>
 
             </Stack.Navigator>
 

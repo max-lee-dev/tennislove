@@ -26,7 +26,7 @@ function LoginScreen({navigation}) {
                 const user = userCredential.user;
 
                 console.log(user);
-                navigation.navigate('HomeStack', {screen: 'Home'})
+                navigation.navigate('HomeStack', {screen: 'Feed Stack'})
                 // ...
             })
             .catch((error) => {
